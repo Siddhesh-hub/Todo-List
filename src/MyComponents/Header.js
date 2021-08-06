@@ -1,5 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
+import {
+  Link
+} from "react-router-dom";
 
 export default function Header(props) {
   return (
@@ -16,25 +19,25 @@ export default function Header(props) {
         >
           <span class="navbar-toggler-icon"></span>
         </button>
-        <a class="navbar-brand" href="#">
+        <Link class="navbar-brand" to="/">
           {props.title}
-        </a>
+        </Link>
         <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">
+              <Link class="nav-link active" aria-current="page" to="/">
                 Home
-              </a>
+              </Link>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">
+              <Link class="nav-link" to="/contact">
                 Contact Us
-              </a>
+              </Link>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">
+              <Link class="nav-link" to="/about">
                 About Us
-              </a>
+              </Link>
             </li>
           </ul>
           {props.searchBar ? (

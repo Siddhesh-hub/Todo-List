@@ -3,38 +3,81 @@ import './App.css';
 import Header from "./MyComponents/Header";
 import { Todos } from "./MyComponents/Todos";
 import { Footer } from "./MyComponents/Footer";
-import React, { useState } from 'react';
+import { AddTodo } from "./MyComponents/AddTodo";
+import { About } from "./MyComponents/About";
+import React, { useState, useEffect } from 'react';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from "react-router-dom";
+
 
 function App() {
+  let initTodo;
+  if (localStorage.getItem("todos") === null) {
+    initTodo = [];
+  }
+  else {
+    initTodo = JSON.parse(localStorage.getItem("todos"));
+  }
+
   const onDelete = (todo) => {
     setTodos(todos.filter((e) => {
       return e !== todo;
-    }))
+    }));
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }
+
+  const addTodo = (title, desc) => {
+    let No;
+    if (todos.length === 0) {
+      No = 0;
+    }
+    else {
+      No = todos[todos.length - 1].No + 1;
+    }
+
+    const myTodo = {
+      No: No,
+      title: title,
+      desc: desc,
+    }
+    setTodos([...todos, myTodo]);
 
   }
-  const [todos, setTodos] = useState([
-    {
-      No: 1,
-      title: "Commit the work to git",
-      desc: "You have to commit the work done till night to git repo."
-    },
-    {
-      No: 2,
-      title: "Gym",
-      desc: "You have a work-out session at gym at 17:00 Hr"
-    },
-    {
-      No: 3,
-      title: "Cleaning",
-      desc: "Make sure to clean the room before mom comes at home."
-    }
-  ]);
+
+  const [todos, setTodos] = useState(initTodo);
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos])
+
 
   return (
     <>
-      <Header title="Sid's-Todo" searchBar={true} />
-      <Todos todos={todos} onDelete={onDelete} />
-      <Footer />
+      <Router>
+        <Header title="Sid's-Todo" searchBar={true} />
+
+        <Switch>
+          <Route exact path="/" render={() => {
+            return (
+              <>
+                <AddTodo addTodo={addTodo} />
+                <Todos todos={todos} onDelete={onDelete} />
+              </>
+            )
+          }}>
+          </Route>
+          <Route exact path="/about">
+            <About />
+          </Route>
+        </Switch>
+
+
+
+        <Footer />
+      </Router>
+
     </>
   );
 }
